@@ -49,7 +49,7 @@ void Engine::init()
     Window::WindowData windowData;
     windowData.mTitle = "Vulkan Engine";
     windowData.mFullScreen = false;
-    windowData.mWindowSize.set(1080, 720);
+    windowData.mWindowSize = {1080, 720};
     windowData.mMainWindow = true;
     Core::WeakPtr<Window::Window> window = GET_SYSTEM(Window::WindowManager).createWindow(windowData);
 

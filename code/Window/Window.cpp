@@ -1,9 +1,10 @@
 #include "Window/Window.hpp"
-#include "Core/Profiler/Profiler.hpp"
 #include "Core/System/SystemsManager.hpp"
 #include "GPU/Core/GPUContext.hpp"
 
-NS_BEGIN(Window)
+namespace Window
+{
+	
 GLFWwindow* Window::getGlfwWindow() const 
 {
     return mGLTFWindow;
@@ -11,23 +12,23 @@ GLFWwindow* Window::getGlfwWindow() const
 
 std::vector<const char*> Window::getRequiredExtensions() const
 {
-	Core::u32 glfwExtensionCount = 0;
+	unsigned int glfwExtensionCount = 0;
     const char** glfwExtensions;
     glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
     return std::vector<const char*>(glfwExtensions, glfwExtensions + glfwExtensionCount);
 }
 
-Maths::Vector2 Window::getWindowSize() const
+WindowSize Window::getWindowSize() const
 {
 	return mWindowData.mWindowSize;
 }
 
-Core::f32 Window::getAspectRatio() const
+float Window::getAspectRatio() const
 {
 	return mWindowData.mWindowSize.x / mWindowData.mWindowSize.y;
 }
 
-void Window::init(Core::i32 id, const WindowData& windowData)
+void Window::init(int id, const WindowData& windowData)
 {
     mID = id;
     mWindowData = windowData;
@@ -54,12 +55,12 @@ void Window::init(Core::i32 id, const WindowData& windowData)
 
     if(mWindowData.mFullScreen)
     {
-	    mWindowData.mWindowSize.set(mode->width, mode->height);
+	    mWindowData.mWindowSize = WindowSize{(float)mode->width, (float)mode->height};
     }
     
     // glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
 
-	mGLTFWindow = glfwCreateWindow(mWindowData.mWindowSize.x, mWindowData.mWindowSize.y, mWindowData.mTitle.get().c_str(), /*monitor*/NULL, NULL);
+	mGLTFWindow = glfwCreateWindow(mWindowData.mWindowSize.x, mWindowData.mWindowSize.y, mWindowData.mTitle.c_str(), /*monitor*/NULL, NULL);
 
     glfwSetWindowUserPointer(mGLTFWindow, reinterpret_cast<void *>(this));
 
@@ -108,9 +109,9 @@ void Window::setCursorVisibility(bool visible)
     glfwSetInputMode(mGLTFWindow, GLFW_CURSOR, visible ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
 }
 
-void Window::onResize(GLFWwindow *window, Core::i32 width, Core::i32 height)
+void Window::onResize(GLFWwindow *window, int width, int height)
 {
-	mWindowData.mWindowSize.set(width, height);
+	mWindowData.mWindowSize = WindowSize{(float)width, (float)height};
 	waitUntilNotMinimized();
 
 	FOR_ARRAY(i, mWindowListeners)
@@ -119,37 +120,37 @@ void Window::onResize(GLFWwindow *window, Core::i32 width, Core::i32 height)
 	}
 }
 
-void Window::onResizeGLFW(GLFWwindow *windowGLFW, Core::i32 width, Core::i32 height)
+void Window::onResizeGLFW(GLFWwindow *windowGLFW, int width, int height)
 {
 	Window* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(windowGLFW));
     window->onResize(windowGLFW, width, height);
 }
 
-void Window::keyCallbackGLFW(GLFWwindow *windowGLFW, Core::i32 key, Core::i32 scancode, Core::i32 action, Core::i32 mods)
+void Window::keyCallbackGLFW(GLFWwindow *windowGLFW, int key, int scancode, int action, int mods)
 {
     Window* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(windowGLFW));
     window->keyCallback(key, scancode, action, mods);
 }
 
-void Window::mouseButtonCallbackGLFW(GLFWwindow *windowGLFW, Core::i32 button, Core::i32 action, Core::i32 mods)
+void Window::mouseButtonCallbackGLFW(GLFWwindow *windowGLFW, int button, int action, int mods)
 {
     Window* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(windowGLFW));
     window->mouseButtonCallback(button, action, mods);
 }
 
-void Window::scrollCallbackGLFW(GLFWwindow *windowGLFW, Core::f64 xoffset, Core::f64 yoffset)
+void Window::scrollCallbackGLFW(GLFWwindow *windowGLFW, double xoffset, double yoffset)
 {
     Window* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(windowGLFW));
     window->scrollCallback(xoffset, yoffset);
 }
 
-void Window::charCallbackGLFW(GLFWwindow *windowGLFW, Core::u32 codepoint)
+void Window::charCallbackGLFW(GLFWwindow *windowGLFW, unsigned int codepoint)
 {
     Window* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(windowGLFW));
     window->charCallback(codepoint);
 }
 
-void Window::keyCallback(Core::i32 key, Core::i32 scancode, Core::i32 action, Core::i32 mods)
+void Window::keyCallback(int key, int scancode, int action, int mods)
 {
 	mInput->smModifier = mods;
 
@@ -235,7 +236,7 @@ void Window::keyCallback(Core::i32 key, Core::i32 scancode, Core::i32 action, Co
 	}
 }
 
-void Window::mouseButtonCallback(Core::i32 button, Core::i32 action, Core::i32 mods)
+void Window::mouseButtonCallback(int button, int action, int mods)
 {
 	mInput->smModifier = mods;
 
@@ -268,7 +269,7 @@ void Window::mouseButtonCallback(Core::i32 button, Core::i32 action, Core::i32 m
 	}
 }
 
-void Window::scrollCallback(Core::f64 xoffset, Core::f64 yoffset)
+void Window::scrollCallback(double xoffset, double yoffset)
 {
 	mInput->smScroll = yoffset;
 
@@ -277,27 +278,26 @@ void Window::scrollCallback(Core::f64 xoffset, Core::f64 yoffset)
 	GET_SYSTEM(Event::EventsManager).send<Input::InputEventScroll>(nullptr, mInput, &event);
 }
 
-void Window::charCallback(Core::u32 codepoint)
+void Window::charCallback(unsigned int codepoint)
 {
 	Input::InputEventChar event;
 	event.mChar = (char)codepoint;
 	GET_SYSTEM(Event::EventsManager).send<Input::InputEventChar>(nullptr, mInput, &event);
 }
 
-Maths::Vector2 Window::getMousePosition() const
+Input::InputCursorPosition Window::getMousePosition() const
 {
-	Core::f64 mouseCoordX, mouseCoordY;
+	double mouseCoordX, mouseCoordY;
 
 	glfwGetCursorPos(mGLTFWindow, &mouseCoordX, &mouseCoordY);
 
-	Core::f64 halfWindowSizeX = mWindowData.mWindowSize.x / 2.0;
-	Core::f64 halfWindowSizeY = mWindowData.mWindowSize.y / 2.0;
+	double halfWindowSizeX = mWindowData.mWindowSize.x / 2.0;
+	double halfWindowSizeY = mWindowData.mWindowSize.y / 2.0;
 
 	mouseCoordX = mouseCoordX - halfWindowSizeX;
 	mouseCoordY = halfWindowSizeY - mouseCoordY;
 
-	Maths::Vector2 newMouseCoordinates(mouseCoordX / halfWindowSizeX, mouseCoordY / halfWindowSizeY);
-
+	Input::InputCursorPosition newMouseCoordinates{mouseCoordX / halfWindowSizeX, mouseCoordY / halfWindowSizeY};
     return newMouseCoordinates;
 }
 
@@ -308,7 +308,7 @@ void Window::pollEvents() const
 
 void Window::waitUntilNotMinimized() const
 {
-	Maths::Vector2 size = getWindowSize();
+	WindowSize size = getWindowSize();
 	int width = size.x;
 	int height = size.y;
 
@@ -345,4 +345,4 @@ VkSurfaceKHR Window::createSurface(GPUContext* gpuContext) const
     return surface;
 }
 
-NS_END
+};

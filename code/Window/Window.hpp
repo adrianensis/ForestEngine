@@ -1,20 +1,26 @@
 #pragma once
 
 #include "Input/Input.hpp"
-#include "Core/System/SystemsManager.hpp"
-#include "Window/WindowFramework.hpp"
 #include "GPU/Window/GPUWindow.hpp"
-class GPUContext;
+#include "Window/WindowFramework.hpp"
 
-NS_BEGIN(Window)
+namespace Window
+{
+
+class WindowSize
+{
+public:
+    float x = 0;
+    float y = 0;
+};
 
 class WindowData
 {
 public:
-    Maths::Vector2 mWindowSize;
+    WindowSize mWindowSize;
     bool mFullScreen = false;
     bool mMainWindow = false;
-    Core::HashedString mTitle;
+    std::string mTitle;
 };
 
 class Window;
@@ -27,21 +33,21 @@ public:
 class Window: public Input::IWindowInputAdapter, public IGPUWindow
 {
 public:
-    void init(Core::i32 id, const WindowData& windowData);
+    void init(int id, const WindowData& windowData);
     void terminate();
 
     GLFWwindow* getGlfwWindow() const;
     std::vector<const char*> getRequiredExtensions() const;
 
-    Maths::Vector2 getWindowSize() const;
-    Core::f32 getAspectRatio() const;
+    WindowSize getWindowSize() const;
+    float getAspectRatio() const;
     bool isClosed() const;
     void swap();
 
     void pollEvents() const;
     
     void setCursorVisibility(bool visible);
-    virtual Maths::Vector2 getMousePosition() const override;
+    virtual Input::InputCursorPosition getMousePosition() const override;
 
     void waitUntilNotMinimized() const;
     bool isIconified() const;
@@ -49,28 +55,28 @@ public:
 
     virtual std::vector<const char*> getRequiredGPUExtensions() const override
     { return getRequiredExtensions(); }
-    virtual Maths::Vector2 getGPUWindowSize() const override
-    { return getWindowSize(); }
+    virtual GPUWindowSize getGPUWindowSize() const override
+    { return GPUWindowSize{mWindowData.mWindowSize.x, mWindowData.mWindowSize.y}; }
     virtual VkSurfaceKHR createSurface(GPUContext* gpuContext) const override;
 
 private:
-    void onResize(GLFWwindow *window, Core::i32 width, Core::i32 height);
+    void onResize(GLFWwindow *window, int width, int height);
 
-    static void onResizeGLFW(GLFWwindow *window, Core::i32 width, Core::i32 height);
-    static void keyCallbackGLFW(GLFWwindow *window, Core::i32 key, Core::i32 scancode, Core::i32 action, Core::i32 mods);
-    static void mouseButtonCallbackGLFW(GLFWwindow *window, Core::i32 button, Core::i32 action, Core::i32 mods);
-    static void scrollCallbackGLFW(GLFWwindow *window, Core::f64 xoffset, Core::f64 yoffset);
-    static void charCallbackGLFW(GLFWwindow *window, Core::u32 codepoint);
+    static void onResizeGLFW(GLFWwindow *window, int width, int height);
+    static void keyCallbackGLFW(GLFWwindow *window, int key, int scancode, int action, int mods);
+    static void mouseButtonCallbackGLFW(GLFWwindow *window, int button, int action, int mods);
+    static void scrollCallbackGLFW(GLFWwindow *window, double xoffset, double yoffset);
+    static void charCallbackGLFW(GLFWwindow *window, unsigned int codepoint);
 
-    virtual void keyCallback(Core::i32 key, Core::i32 scancode, Core::i32 action, Core::i32 mods) override;
-    virtual void mouseButtonCallback(Core::i32 button, Core::i32 action, Core::i32 mods) override;
-    virtual void scrollCallback(Core::f64 xoffset, Core::f64 yoffset) override;
-    virtual void charCallback(Core::u32 codepoint) override;
+    virtual void keyCallback(int key, int scancode, int action, int mods) override;
+    virtual void mouseButtonCallback(int button, int action, int mods) override;
+    virtual void scrollCallback(double xoffset, double yoffset) override;
+    virtual void charCallback(unsigned int codepoint) override;
 
 private:
 	GLFWwindow *mGLTFWindow = nullptr;
 	WindowData mWindowData;
-    Core::i32 mID = -1;
+    int mID = -1;
 
     std::vector<IWindowListener*> mWindowListeners;
 
@@ -78,4 +84,4 @@ public:
     CGET(GLTFWindow);
     CRGET(WindowData);
 };
-NS_END
+};

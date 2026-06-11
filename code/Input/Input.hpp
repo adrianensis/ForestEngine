@@ -1,11 +1,18 @@
 #pragma once
 
-#include "Core/Core.hpp"
 #include "Core/System/System.hpp"
 #include "Input/InputEvents.hpp"
 
 NS_BEGIN(Input)
 class Input;
+
+class InputCursorPosition
+{
+public:
+    double x = 0;
+    double y = 0;
+};
+
 class IWindowInputAdapter
 {
 public:
@@ -14,7 +21,7 @@ public:
     virtual void mouseButtonCallback(int button, int action, int mods) = 0;
     virtual void scrollCallback(double xoffset, double yoffset) = 0;
     virtual void charCallback(unsigned int codepoint) = 0;
-    virtual Maths::Vector2 getMousePosition() const = 0;
+    virtual InputCursorPosition getMousePosition() const = 0;
 
     void setInput(Input* input) { mInput = input; }
 protected:
@@ -26,26 +33,26 @@ class Input: public System::System, public Event::IEventObject
 public:
     void init();
     void update();
-    bool isKeyPressedOnce(Core::i32 key);
-    bool isKeyPressed(Core::i32 key);
-    bool isModifierPressed(Core::i32 modifier);
-    bool isMouseButtonPressedOnce(Core::i32 button);
-    bool isMouseButtonPressed(Core::i32 button);
-    const Maths::Vector2& getMousePosition();
-    Core::f32 getScroll();
+    bool isKeyPressedOnce(int key);
+    bool isKeyPressed(int key);
+    bool isModifierPressed(int modifier);
+    bool isMouseButtonPressedOnce(int button);
+    bool isMouseButtonPressed(int button);
+    const InputCursorPosition& getMousePosition();
+    float getScroll();
     void clearMouseButton();
     void clearKey();
 
     void setWindowInputAdapter(IWindowInputAdapter* windowInputAdapter);
     
 public:
-	Maths::Vector2 smMouseCoordinates;
-	Core::i32 smLastMouseButtonPressed;
-	Core::i32 smLastKeyPressed;
-	Core::i32 smModifier;
+	InputCursorPosition smMouseCoordinates;
+	int smLastMouseButtonPressed;
+	int smLastKeyPressed;
+	int smModifier;
 	bool smKeyJustPressed;
 	bool smButtonJustPressed;
-	Core::f32 smScroll;
+	float smScroll;
 
 private:
     IWindowInputAdapter* mWindowInputAdapter = nullptr;

@@ -18,8 +18,7 @@ Maths::Vector3 UIUtils::correctAspectRatioVectorX(Window::Window* window, const 
 Maths::Vector3 UIUtils::toScreenSpace(Window::Window* window, const Maths::Vector3& vector)
 {
 	Maths::Vector3 correctedVector = vector;
-    Maths::Vector3 windowSize = window->getWindowSize();
-    windowSize.z = 1;
+    Maths::Vector3 windowSize(window->getWindowSize().x, window->getWindowSize().y, 1);
 	correctedVector = correctedVector / windowSize;
 	return correctedVector;
 }

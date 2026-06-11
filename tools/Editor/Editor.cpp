@@ -180,7 +180,8 @@ void Editor::update(Core::f32 dt)
         cameraTransform->lookAt(cameraTransform->getWorldPosition() + -Maths::Vector3::smForward);
 	}
 
-    Maths::Vector2 currentMousePosition = GET_SYSTEM(Input::Input).getMousePosition();
+    const Input::InputCursorPosition& currentCursorPosition = GET_SYSTEM(Input::Input).getMousePosition();
+    Maths::Vector2 currentMousePosition(currentCursorPosition.x, currentCursorPosition.y);
     // currentMousePosition.set(-1,0,0);
     // LOG_VAR(currentMousePosition.x);
     // LOG_VAR(currentMousePosition.y);

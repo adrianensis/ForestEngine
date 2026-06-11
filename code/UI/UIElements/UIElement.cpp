@@ -4,6 +4,7 @@
 #include "Core/EntityComponent/EntityComponentManager.hpp"
 #include "Graphics/MeshRenderer/MeshRenderer.hpp"
 
+#include "Input/Input.hpp"
 #include "UI/UIManager.hpp"
 #include "UI/UIGroup.hpp"
 
@@ -60,7 +61,8 @@ bool UIElement::isMouseCursorInsideElement() const
         return false;
     }
 
-	Maths::Vector2 mousePosition = GET_SYSTEM(Input::Input).getMousePosition();
+	Input::InputCursorPosition inpuutCursorPosition = GET_SYSTEM(Input::Input).getMousePosition();
+    Maths::Vector2 mousePosition(inpuutCursorPosition.x, inpuutCursorPosition.y);
 
 	// if(mTransform->mGeometricSpace == Maths::GeometricSpace::WORLD)
 	{

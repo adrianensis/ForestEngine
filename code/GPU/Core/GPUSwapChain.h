@@ -2,6 +2,7 @@
 
 #include "GPU/Core/GPUDevice.h"
 #include "GPU/Core/GPUPhysicalDevice.h"
+#include "GPU/Window/GPUWindow.hpp"
 
 #include <vulkan/vulkan.h>
 #include <vector>
@@ -13,7 +14,7 @@ private:
 
 public:
     GPUSwapChain(GPUDevice* vulkanDevice, VkSurfaceKHR vkSurface);
-    bool init(Maths::Vector2 windowSizeInPixels);
+    bool init(GPUWindowSize windowSizeInPixels);
     void terminate();
 
 private:
@@ -28,7 +29,7 @@ private:
 
 private:
     GPUDevice* vulkanDevice = nullptr;
-    Maths::Vector2 mWindowSizeInPixels;
+    GPUWindowSize mWindowSizeInPixels;
     VkSurfaceKHR vkSurface;
     VkSurfaceFormatKHR mSurfaceFormat{};
     VkPresentModeKHR presentMode{};
