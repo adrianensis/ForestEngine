@@ -2,106 +2,107 @@
 #include "Core/Event/EventsManager.hpp"
 #include "Core/System/SystemsManager.hpp"
 
-NS_BEGIN(Input)
-void Input::init()
+namespace Input
 {
-	smMouseCoordinates = InputCursorPosition();
-	smLastMouseButtonPressed = INVALID_INDEX;
-	smLastKeyPressed = INVALID_INDEX;
-	smModifier = INVALID_INDEX;
-	smKeyJustPressed = false;
-	smButtonJustPressed = false;
-	smScroll = 0;
+void IInput::init()
+{
+	mMouseCoordinates = InputCursorPosition();
+	mLastMouseButtonPressed = INVALID_INDEX;
+	mLastKeyPressed = INVALID_INDEX;
+	mModifier = INVALID_INDEX;
+	mKeyJustPressed = false;
+	mButtonJustPressed = false;
+	mScroll = 0;
 }
 
-void Input::setWindowInputAdapter(IWindowInputAdapter* windowInputAdapter)
+void IInput::setWindowInputAdapter(IWindowInputAdapter* windowInputAdapter)
 {
 	mWindowInputAdapter = windowInputAdapter;
 	windowInputAdapter->setInput(this);
 }
 
-void Input::update()
+void IInput::update()
 {
-	smKeyJustPressed = false;
-	smButtonJustPressed = false;
-	smScroll = 0;
+	mKeyJustPressed = false;
+	mButtonJustPressed = false;
+	mScroll = 0;
 
 	assert(mWindowInputAdapter && "mWindowInputAdapter is NULL!");
 
 	InputCursorPosition newMouseCoordinates = mWindowInputAdapter->getMousePosition();
 
-	// if (!smMouseCoordinates.eq(newMouseCoordinates))
-	{
-		smMouseCoordinates = newMouseCoordinates;
+	// if (!mMouseCoordinates.eq(newMouseCoordinates))
+	// {
+	// 	mMouseCoordinates = newMouseCoordinates;
 
-		InputEventMouseMoved event;
-		GET_SYSTEM(Event::EventsManager).send<InputEventMouseMoved>(nullptr, this, &event);
-	}
+	// 	InputEventMouseMoved event;
+	// 	GET_SYSTEM(Event::EventsManager).send<InputEventMouseMoved>(nullptr, this, &event);
+	// }
 
-	if(smLastMouseButtonPressed != -1)
-	{
-		InputEventMouseButtonHold event;
-		event.mButton = smLastMouseButtonPressed;
-		event.mMods = smModifier;
-		GET_SYSTEM(Event::EventsManager).send<InputEventMouseButtonHold>(nullptr, this, &event);
-	}
+	// if(mLastMouseButtonPressed != -1)
+	// {
+	// 	InputEventMouseButtonHold event;
+	// 	event.mButton = mLastMouseButtonPressed;
+	// 	event.mMods = mModifier;
+	// 	GET_SYSTEM(Event::EventsManager).send<InputEventMouseButtonHold>(nullptr, this, &event);
+	// }
 
-	if(smLastKeyPressed != -1)
-	{
-		InputEventKeyHold event;
-		event.mKey = smLastKeyPressed;
-		event.mMods = smModifier;
-		GET_SYSTEM(Event::EventsManager).send<InputEventKeyHold>(nullptr, this, &event);
-	}
+	// if(mLastKeyPressed != -1)
+	// {
+	// 	InputEventKeyHold event;
+	// 	event.mKey = mLastKeyPressed;
+	// 	event.mMods = mModifier;
+	// 	GET_SYSTEM(Event::EventsManager).send<InputEventKeyHold>(nullptr, this, &event);
+	// }
 }
 
-bool Input::isKeyPressedOnce(int key)
+bool IInput::isKeyPressedOnce(int key)
 {
-	return smKeyJustPressed && key == smLastKeyPressed;
+	return mKeyJustPressed && key == mLastKeyPressed;
 }
 
-bool Input::isKeyPressed(int key)
+bool IInput::isKeyPressed(int key)
 {
-	return key == smLastKeyPressed;
+	return key == mLastKeyPressed;
 }
 
-bool Input::isModifierPressed(int modifier)
+bool IInput::isModifierPressed(int modifier)
 {
-	return modifier == smModifier;
+	return modifier == mModifier;
 }
 
-bool Input::isMouseButtonPressedOnce(int button)
+bool IInput::isMouseButtonPressedOnce(int button)
 {
-	return smButtonJustPressed && button == smLastMouseButtonPressed;
+	return mButtonJustPressed && button == mLastMouseButtonPressed;
 }
 
-bool Input::isMouseButtonPressed(int button)
+bool IInput::isMouseButtonPressed(int button)
 {
-	return button == smLastMouseButtonPressed;
+	return button == mLastMouseButtonPressed;
 }
 
-const InputCursorPosition& Input::getMousePosition()
+const InputCursorPosition& IInput::getMousePosition()
 {
-	return smMouseCoordinates;
+	return mMouseCoordinates;
 }
 
-float Input::getScroll()
+float IInput::getScroll()
 {
-	return smScroll;
+	return mScroll;
 }
 
-void Input::clearMouseButton()
+void IInput::clearMouseButton()
 {
-	smLastMouseButtonPressed = INVALID_INDEX;
-	smModifier = INVALID_INDEX;
-	smButtonJustPressed = false;
+	mLastMouseButtonPressed = INVALID_INDEX;
+	mModifier = INVALID_INDEX;
+	mButtonJustPressed = false;
 }
 
-void Input::clearKey()
+void IInput::clearKey()
 {
-	smLastKeyPressed = INVALID_INDEX;
-	smModifier = INVALID_INDEX;
-	smKeyJustPressed = false;
+	mLastKeyPressed = INVALID_INDEX;
+	mModifier = INVALID_INDEX;
+	mKeyJustPressed = false;
 }
 
-NS_END
+};

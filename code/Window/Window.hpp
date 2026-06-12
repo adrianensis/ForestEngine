@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/Event/Event.hpp"
 #include "Input/Input.hpp"
 #include "GPU/Window/GPUWindow.hpp"
 #include "Window/WindowFramework.hpp"
@@ -30,7 +31,7 @@ public:
     virtual void onResize(Window* window) = 0;
 };
 
-class Window: public Input::IWindowInputAdapter, public IGPUWindow
+class Window: public Input::IWindowInputAdapter, public Event::IEventObject, public IGPUWindow
 {
 public:
     void init(int id, const WindowData& windowData);
@@ -60,18 +61,21 @@ public:
     virtual VkSurfaceKHR createSurface(GPUContext* gpuContext) const override;
 
 private:
-    void onResize(GLFWwindow *window, int width, int height);
+    Input::InputCursorPosition processCursorPosition(double x, double y) const;
+    void onResize(GLFWwindow *windowGLFW, int width, int height);
 
-    static void onResizeGLFW(GLFWwindow *window, int width, int height);
-    static void keyCallbackGLFW(GLFWwindow *window, int key, int scancode, int action, int mods);
-    static void mouseButtonCallbackGLFW(GLFWwindow *window, int button, int action, int mods);
-    static void scrollCallbackGLFW(GLFWwindow *window, double xoffset, double yoffset);
-    static void charCallbackGLFW(GLFWwindow *window, unsigned int codepoint);
+    static void onResizeGLFW(GLFWwindow *windowGLFW, int width, int height);
+    static void keyCallbackGLFW(GLFWwindow *windowGLFW, int key, int scancode, int action, int mods);
+    static void mouseButtonCallbackGLFW(GLFWwindow *windowGLFW, int button, int action, int mods);
+    static void scrollCallbackGLFW(GLFWwindow *windowGLFW, double xoffset, double yoffset);
+    static void charCallbackGLFW(GLFWwindow *windowGLFW, unsigned int codepoint);
+    static void cursorPositionCallbackGLFW(GLFWwindow *windowGLFW, double x, double y);
 
     virtual void keyCallback(int key, int scancode, int action, int mods) override;
     virtual void mouseButtonCallback(int button, int action, int mods) override;
     virtual void scrollCallback(double xoffset, double yoffset) override;
     virtual void charCallback(unsigned int codepoint) override;
+    virtual void cursorPositionCallback(double x, double y) override;
 
 private:
 	GLFWwindow *mGLTFWindow = nullptr;

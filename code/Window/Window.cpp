@@ -1,4 +1,7 @@
 #include "Window/Window.hpp"
+#include "GLFW/glfw3.h"
+#include "Input/InputEvents.hpp"
+#include "Core/Event/EventsManager.hpp"
 #include "Core/System/SystemsManager.hpp"
 #include "GPU/Core/GPUContext.hpp"
 
@@ -82,6 +85,7 @@ void Window::init(int id, const WindowData& windowData)
 	glfwSetMouseButtonCallback(mGLTFWindow, mouseButtonCallbackGLFW);
 	glfwSetScrollCallback(mGLTFWindow, scrollCallbackGLFW);
 	glfwSetCharCallback(mGLTFWindow, charCallbackGLFW);
+	glfwSetCursorPosCallback(mGLTFWindow, cursorPositionCallbackGLFW);
     glfwSetFramebufferSizeCallback(mGLTFWindow, &this->onResizeGLFW);
 }
 
@@ -150,47 +154,53 @@ void Window::charCallbackGLFW(GLFWwindow *windowGLFW, unsigned int codepoint)
     window->charCallback(codepoint);
 }
 
+void Window::cursorPositionCallbackGLFW(GLFWwindow *windowGLFW, double x, double y)
+{
+    Window* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(windowGLFW));
+    window->cursorPositionCallback(x, y);
+}
+
 void Window::keyCallback(int key, int scancode, int action, int mods)
 {
-	mInput->smModifier = mods;
+	mInput->mModifier = mods;
 
 	switch (action)
 	{
 		case GLFW_PRESS:
 		{
-			mInput->smLastKeyPressed = key;
-			mInput->smKeyJustPressed = true;
+			mInput->mLastKeyPressed = key;
+			mInput->mKeyJustPressed = true;
 
 			switch (key)
 			{
 				case GLFW_KEY_ENTER:
 				{
 					Input::InputEventKeyEnter event;
-					GET_SYSTEM(Event::EventsManager).send<Input::InputEventKeyEnter>(nullptr, mInput, &event);
+					GET_SYSTEM(Event::EventsManager).send<Input::InputEventKeyEnter>(nullptr, this, &event);
 					break;
 				}
 				case GLFW_KEY_ESCAPE:
 				{
 					Input::InputEventKeyEsc event;
-					GET_SYSTEM(Event::EventsManager).send<Input::InputEventKeyEsc>(nullptr, mInput, &event);
+					GET_SYSTEM(Event::EventsManager).send<Input::InputEventKeyEsc>(nullptr, this, &event);
 					break;
 				}
 				case GLFW_KEY_DELETE:
 				{
 					Input::InputEventKeyDelete event;
-					GET_SYSTEM(Event::EventsManager).send<Input::InputEventKeyDelete>(nullptr, mInput, &event);
+					GET_SYSTEM(Event::EventsManager).send<Input::InputEventKeyDelete>(nullptr, this, &event);
 					break;
 				}
 				case GLFW_KEY_BACKSPACE:
 				{
 					Input::InputEventKeyBackspace event;
-					GET_SYSTEM(Event::EventsManager).send<Input::InputEventKeyBackspace>(nullptr, mInput, &event);
+					GET_SYSTEM(Event::EventsManager).send<Input::InputEventKeyBackspace>(nullptr, this, &event);
 					break;
 				}
 				case GLFW_KEY_TAB:
 				{
 					Input::InputEventKeyTab event;
-					GET_SYSTEM(Event::EventsManager).send<Input::InputEventKeyTab>(nullptr, mInput, &event);
+					GET_SYSTEM(Event::EventsManager).send<Input::InputEventKeyTab>(nullptr, this, &event);
 					break;
 				}
 				case GLFW_KEY_UP:
@@ -200,7 +210,7 @@ void Window::keyCallback(int key, int scancode, int action, int mods)
 				{
 					Input::InputEventKeyArrow event;
 					event.mArrowButton = key;
-					GET_SYSTEM(Event::EventsManager).send<Input::InputEventKeyArrow>(nullptr, mInput, &event);
+					GET_SYSTEM(Event::EventsManager).send<Input::InputEventKeyArrow>(nullptr, this, &event);
 					break;
 				}
 				default:
@@ -208,7 +218,7 @@ void Window::keyCallback(int key, int scancode, int action, int mods)
 					Input::InputEventKeyPressed event;
 					event.mKey = key;
 					event.mMods = mods;
-					GET_SYSTEM(Event::EventsManager).send<Input::InputEventKeyPressed>(nullptr, mInput, &event);
+					GET_SYSTEM(Event::EventsManager).send<Input::InputEventKeyPressed>(nullptr, this, &event);
 					break;
 				}
 			}
@@ -219,7 +229,7 @@ void Window::keyCallback(int key, int scancode, int action, int mods)
 			Input::InputEventKeyReleased event;
 			event.mKey = key;
 			event.mMods = mods;
-			GET_SYSTEM(Event::EventsManager).send<Input::InputEventKeyReleased>(nullptr, mInput, &event);
+			GET_SYSTEM(Event::EventsManager).send<Input::InputEventKeyReleased>(nullptr, this, &event);
 
 			mInput->clearKey();
 			break;
@@ -229,7 +239,7 @@ void Window::keyCallback(int key, int scancode, int action, int mods)
 			Input::InputEventKeyHold event;
 			event.mKey = key;
 			event.mMods = mods;
-			GET_SYSTEM(Event::EventsManager).send<Input::InputEventKeyHold>(nullptr, mInput, &event);
+			GET_SYSTEM(Event::EventsManager).send<Input::InputEventKeyHold>(nullptr, this, &event);
 
 			break;
 		}
@@ -238,19 +248,19 @@ void Window::keyCallback(int key, int scancode, int action, int mods)
 
 void Window::mouseButtonCallback(int button, int action, int mods)
 {
-	mInput->smModifier = mods;
+	mInput->mModifier = mods;
 
 	switch (action)
 	{
 		case GLFW_PRESS:
 		{
-			mInput->smLastMouseButtonPressed = button;
-			mInput->smButtonJustPressed = true;
+			mInput->mLastMouseButtonPressed = button;
+			mInput->mButtonJustPressed = true;
 
 			Input::InputEventMouseButtonPressed event;
 			event.mButton = button;
 			event.mMods = mods;
-			GET_SYSTEM(Event::EventsManager).send<Input::InputEventMouseButtonPressed>(nullptr, mInput, &event);
+			GET_SYSTEM(Event::EventsManager).send<Input::InputEventMouseButtonPressed>(nullptr, this, &event);
 			
 			break;
 		}
@@ -262,7 +272,7 @@ void Window::mouseButtonCallback(int button, int action, int mods)
 			
             mInput->clearMouseButton();
 
-			GET_SYSTEM(Event::EventsManager).send<Input::InputEventMouseButtonReleased>(nullptr, mInput, &event);
+			GET_SYSTEM(Event::EventsManager).send<Input::InputEventMouseButtonReleased>(nullptr, this, &event);
 
 			break;
 		}
@@ -271,34 +281,47 @@ void Window::mouseButtonCallback(int button, int action, int mods)
 
 void Window::scrollCallback(double xoffset, double yoffset)
 {
-	mInput->smScroll = yoffset;
+	mInput->mScroll = yoffset;
 
 	Input::InputEventScroll event;
 	event.mScroll = yoffset;
-	GET_SYSTEM(Event::EventsManager).send<Input::InputEventScroll>(nullptr, mInput, &event);
+	GET_SYSTEM(Event::EventsManager).send<Input::InputEventScroll>(nullptr, this, &event);
 }
 
 void Window::charCallback(unsigned int codepoint)
 {
 	Input::InputEventChar event;
 	event.mChar = (char)codepoint;
-	GET_SYSTEM(Event::EventsManager).send<Input::InputEventChar>(nullptr, mInput, &event);
+	GET_SYSTEM(Event::EventsManager).send<Input::InputEventChar>(nullptr, this, &event);
+}
+
+void Window::cursorPositionCallback(double x, double y)
+{
+	mInput->mMouseCoordinates = processCursorPosition(x, y);
+	Input::InputEventMouseMoved event;
+	GET_SYSTEM(Event::EventsManager).send<Input::InputEventMouseMoved>(nullptr, this, &event);
 }
 
 Input::InputCursorPosition Window::getMousePosition() const
 {
-	double mouseCoordX, mouseCoordY;
+	// double mouseCoordX, mouseCoordY;
+	// glfwGetCursorPos(mGLTFWindow, &mouseCoordX, &mouseCoordY);
+	// Input::InputCursorPosition newMouseCoordinates = processCursorPosition(mouseCoordX, mouseCoordY);
+    // return newMouseCoordinates;
 
-	glfwGetCursorPos(mGLTFWindow, &mouseCoordX, &mouseCoordY);
+	return mInput->mMouseCoordinates;
+}
 
+Input::InputCursorPosition Window::processCursorPosition(double x, double y) const
+{
 	double halfWindowSizeX = mWindowData.mWindowSize.x / 2.0;
 	double halfWindowSizeY = mWindowData.mWindowSize.y / 2.0;
 
-	mouseCoordX = mouseCoordX - halfWindowSizeX;
-	mouseCoordY = halfWindowSizeY - mouseCoordY;
+	x = x - halfWindowSizeX;
+	y = halfWindowSizeY - y;
 
-	Input::InputCursorPosition newMouseCoordinates{mouseCoordX / halfWindowSizeX, mouseCoordY / halfWindowSizeY};
-    return newMouseCoordinates;
+	Input::InputCursorPosition newMouseCoordinates{x / halfWindowSizeX, y / halfWindowSizeY};
+	return newMouseCoordinates;
 }
 
 void Window::pollEvents() const

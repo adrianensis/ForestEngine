@@ -4,7 +4,7 @@
 #include "Core/EntityComponent/EntityComponentManager.hpp"
 #include "Graphics/MeshRenderer/MeshRenderer.hpp"
 
-#include "Input/Input.hpp"
+#include "Input/InputManager.hpp"
 #include "UI/UIManager.hpp"
 #include "UI/UIGroup.hpp"
 
@@ -61,12 +61,12 @@ bool UIElement::isMouseCursorInsideElement() const
         return false;
     }
 
-	Input::InputCursorPosition inpuutCursorPosition = GET_SYSTEM(Input::Input).getMousePosition();
+	Input::InputCursorPosition inpuutCursorPosition = GET_SYSTEM(Input::InputManager).getInput()->getMousePosition();
     Maths::Vector2 mousePosition(inpuutCursorPosition.x, inpuutCursorPosition.y);
 
 	// if(mTransform->mGeometricSpace == Maths::GeometricSpace::WORLD)
 	{
-		// mousePosition = GET_SYSTEM(ScenesManager).getCurrentCamera()->screenToWorld(GET_SYSTEM(Input::Input).getMousePosition());
+		// mousePosition = GET_SYSTEM(ScenesManager).getCurrentCamera()->screenToWorld(GET_SYSTEM(Input::InputManager).getMousePosition());
 	}
 
     // GET_SYSTEM(DebugRenderer).drawRectangle(Maths::Cube(getLeftTopPosition(), correctedSize), 1, false);
@@ -227,7 +227,7 @@ void UIElement::onPressedEventReceived()
 
     if (mConsumeInput)
     {
-        GET_SYSTEM(Input::Input).clearMouseButton();
+        GET_SYSTEM(Input::InputManager).getInput()->clearMouseButton();
     }
 }
 
@@ -241,7 +241,7 @@ void UIElement::onReleasedEventReceived()
 
     if (mConsumeInput)
     {
-        GET_SYSTEM(Input::Input).clearMouseButton();
+        GET_SYSTEM(Input::InputManager).getInput()->clearMouseButton();
     }
 
     onPrePressed();

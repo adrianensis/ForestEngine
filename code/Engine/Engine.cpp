@@ -5,6 +5,7 @@
 #include "Engine/Paths.hpp"
 #include "Graphics/Camera/CameraManager.hpp"
 #include "Input/Input.hpp"
+#include "Input/InputManager.hpp"
 #include "Core/Event/EventsManager.hpp"
 #include "Core/Time/TimeUtils.hpp"
 #include "Core/Time/TimerManager.hpp"
@@ -56,9 +57,16 @@ void Engine::init()
 	// TODO: GPUInstance should be propagated, not singleton
     GPUInstance::getInstance().init(window.getInternalPointer());
 
-    CREATE_SYSTEM(Input::Input);
-    GET_SYSTEM(Input::Input).init();
-    GET_SYSTEM(Input::Input).setWindowInputAdapter(GET_SYSTEM(Window::WindowManager).getMainWindow().getInternalPointer());
+	class EngineInput: public Input::IInput
+	{
+
+	};
+
+	EngineInput* engineInput = new EngineInput();
+
+    CREATE_SYSTEM(Input::InputManager);
+    GET_SYSTEM(Input::InputManager).init(engineInput);
+    GET_SYSTEM(Input::InputManager).getInput()->setWindowInputAdapter(GET_SYSTEM(Window::WindowManager).getMainWindow().getInternalPointer());
     CREATE_SYSTEM(CameraManager);
 	
     CREATE_SYSTEM(RenderEngine);
@@ -117,7 +125,7 @@ void Engine::run()
 			postSceneChanged();
 		}
 
-		GET_SYSTEM(Input::Input).update();
+		GET_SYSTEM(Input::InputManager).getInput()->update();
 		GET_SYSTEM(Window::WindowManager).getMainWindow()->pollEvents();
 
 		GET_SYSTEM(Command::CommandLine).update();

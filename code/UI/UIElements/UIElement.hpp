@@ -3,7 +3,7 @@
 #include "Scene/Module.hpp"
 #include "UI/UIElementConfig.hpp"
 #include "UI/UIUtils.hpp"
-#include "Input/Input.hpp"
+#include "Input/InputManager.hpp"
 
 class MeshRenderer;
 class UIGroup;

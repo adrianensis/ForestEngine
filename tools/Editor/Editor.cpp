@@ -1,4 +1,5 @@
 #include "Editor.hpp"
+#include "Input/InputManager.hpp"
 #include "Maths/Geometry.hpp"
 #include "Maths/Vector3.hpp"
 #include "GPU/Descriptors/GPUDescriptorLayout.hpp"
@@ -135,52 +136,52 @@ void Editor::update(Core::f32 dt)
 	Maths::Matrix4 cameraRotationMatrix = mCameraGameObject->mTransform->getLocalRotationMatrix();
 	cameraRotationMatrix.invert();
 
-	if(GET_SYSTEM(Input::Input).isKeyPressed(GLFW_KEY_LEFT))
+	if(GET_SYSTEM(Input::InputManager).getInput()->isKeyPressed(GLFW_KEY_LEFT))
 	{
         cameraTransform->addLocalTranslation(cameraRotationMatrix.mulVector(Maths::Vector4(-speed,0,0,1)));
         // mDirectionalLight->mTransform->addLocalRotation(Maths::Vector3(0,-speed,0));
         // cameraTransform->addLocalTranslation(Maths::Vector3(-speed,0,0));
 	}
-	else if (GET_SYSTEM(Input::Input).isKeyPressed(GLFW_KEY_RIGHT))
+	else if (GET_SYSTEM(Input::InputManager).getInput()->isKeyPressed(GLFW_KEY_RIGHT))
 	{
         cameraTransform->addLocalTranslation(cameraRotationMatrix.mulVector(Maths::Vector4(speed,0,0,1)));
         // mDirectionalLight->mTransform->addLocalRotation(Maths::Vector3(0,speed,0));
         // cameraTransform->addLocalTranslation(Maths::Vector3(speed,0,0));
 	}
-	else if (GET_SYSTEM(Input::Input).isKeyPressed(GLFW_KEY_UP))
+	else if (GET_SYSTEM(Input::InputManager).getInput()->isKeyPressed(GLFW_KEY_UP))
 	{
         cameraTransform->addLocalTranslation(cameraRotationMatrix.mulVector(Maths::Vector4(0,0,-speed,1)));
         // mDirectionalLight->mTransform->addLocalRotation(Maths::Vector4(0,0,-speed,1));
         // cameraTransform->addLocalTranslation(Maths::Vector3(0,0,-speed));
 		// cameraTransform->addLocalTranslation(Maths::Vector3(0,speed,0));
 	}
-	else if (GET_SYSTEM(Input::Input).isKeyPressed(GLFW_KEY_DOWN))
+	else if (GET_SYSTEM(Input::InputManager).getInput()->isKeyPressed(GLFW_KEY_DOWN))
 	{
         cameraTransform->addLocalTranslation(cameraRotationMatrix.mulVector(Maths::Vector4(0,0,speed,1)));
         // mDirectionalLight->mTransform->addLocalRotation(Maths::Vector4(0,0,speed,1));
         // cameraTransform->addLocalTranslation(Maths::Vector3(0,0,speed));
 		// cameraTransform->addLocalTranslation(Maths::Vector3(0,-speed,0));
 	}
-	else if (GET_SYSTEM(Input::Input).isKeyPressed(GLFW_KEY_PAGE_UP))
+	else if (GET_SYSTEM(Input::InputManager).getInput()->isKeyPressed(GLFW_KEY_PAGE_UP))
 	{
 		cameraTransform->addLocalTranslation(Maths::Vector3(0,speed,0));
 	}
-	else if (GET_SYSTEM(Input::Input).isKeyPressed(GLFW_KEY_PAGE_DOWN))
+	else if (GET_SYSTEM(Input::InputManager).getInput()->isKeyPressed(GLFW_KEY_PAGE_DOWN))
 	{
 		cameraTransform->addLocalTranslation(Maths::Vector3(0,-speed,0));
 	}
-    else if (GET_SYSTEM(Input::Input).isKeyPressed(GLFW_KEY_HOME))
+    else if (GET_SYSTEM(Input::InputManager).getInput()->isKeyPressed(GLFW_KEY_HOME))
 	{
 		// cameraTransform->addLocalRotation(Maths::Vector3(0,-speed,0));
         cameraTransform->lookAt(cameraTransform->getWorldPosition() + Maths::Vector3::smForward);
 	}
-	else if (GET_SYSTEM(Input::Input).isKeyPressed(GLFW_KEY_END))
+	else if (GET_SYSTEM(Input::InputManager).getInput()->isKeyPressed(GLFW_KEY_END))
 	{
 		// cameraTransform->addLocalRotation(Maths::Vector3(0,speed,0));
         cameraTransform->lookAt(cameraTransform->getWorldPosition() + -Maths::Vector3::smForward);
 	}
 
-    const Input::InputCursorPosition& currentCursorPosition = GET_SYSTEM(Input::Input).getMousePosition();
+    const Input::InputCursorPosition& currentCursorPosition = GET_SYSTEM(Input::InputManager).getInput()->getMousePosition();
     Maths::Vector2 currentMousePosition(currentCursorPosition.x, currentCursorPosition.y);
     // currentMousePosition.set(-1,0,0);
     // LOG_VAR(currentMousePosition.x);
@@ -385,7 +386,7 @@ GameObject* Editor::mousePick()
 
         // // (DebugRenderer).drawCube(bboxScreenSpace, 1, false, Maths::Vector4(0.3,0,1,1));
 
-        // Maths::Vector3 mousePosition = GET_SYSTEM(Input::Input).getMousePosition();
+        // Maths::Vector3 mousePosition = GET_SYSTEM(Input::InputManager).getInput()->getMousePosition();
         // bool hit = Maths::Geometry::testCubePoint(bboxScreenSpace, mousePosition, 0);
         // if(hit)
         // {
@@ -433,12 +434,12 @@ void Editor::handlePressedKeys()
 
 void Editor::handleMouse()
 {
-	if(GET_SYSTEM(Input::Input).isMouseButtonPressedOnce(GLFW_MOUSE_BUTTON_LEFT))
+	if(GET_SYSTEM(Input::InputManager).getInput()->isMouseButtonPressedOnce(GLFW_MOUSE_BUTTON_LEFT))
 	{
         // GET_SYSTEM(ScenesManager).getScene(ScenesManager::smDefaultUISceneName)->removeGameObject(mBuildings.front());
         // mBuildings.pop_front();
         // Camera* camera = mCameraGameObject->getFirstComponent<Camera>();
-        // Maths::Vector2 currentMousePosition = GET_SYSTEM(Input::Input).getMousePosition();
+        // Maths::Vector2 currentMousePosition = GET_SYSTEM(Input::InputManager).getInput()->getMousePosition();
         // Maths::Vector3 position = camera->screenToWorld(currentMousePosition, 0);
         // auto obj = importModel("DamagedHelmet/glTF/DamagedHelmet.gltf", position, 1.0f, Maths::Vector3(0,180,180), false);
         // mGameObjectsArray.push_back(obj);
@@ -452,7 +453,7 @@ void Editor::handleMouse()
         mSelectedGameObject = nullptr;
     }
     
-    if(GET_SYSTEM(Input::Input).isMouseButtonPressedOnce(GLFW_MOUSE_BUTTON_RIGHT))
+    if(GET_SYSTEM(Input::InputManager).getInput()->isMouseButtonPressedOnce(GLFW_MOUSE_BUTTON_RIGHT))
     {
         // mBuildings.push_back(importModel("Building_1/building1.gltf", Maths::Vector3(0,100,0), 10.0f, Maths::Vector3(0,0,0), false));
         

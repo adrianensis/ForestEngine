@@ -1,10 +1,8 @@
 #pragma once
 
-#include "Core/System/System.hpp"
-#include "Input/InputEvents.hpp"
-
-NS_BEGIN(Input)
-class Input;
+namespace Input
+{
+class IInput;
 
 class InputCursorPosition
 {
@@ -21,14 +19,15 @@ public:
     virtual void mouseButtonCallback(int button, int action, int mods) = 0;
     virtual void scrollCallback(double xoffset, double yoffset) = 0;
     virtual void charCallback(unsigned int codepoint) = 0;
+    virtual void cursorPositionCallback(double x, double y) = 0;
     virtual InputCursorPosition getMousePosition() const = 0;
 
-    void setInput(Input* input) { mInput = input; }
+    void setInput(IInput* input) { mInput = input; }
 protected:
-    Input* mInput = nullptr;
+    IInput* mInput = nullptr;
 };
 
-class Input: public System::System, public Event::IEventObject
+class IInput
 {
 public:
     void init();
@@ -45,20 +44,22 @@ public:
 
     void setWindowInputAdapter(IWindowInputAdapter* windowInputAdapter);
     
-public:
-	InputCursorPosition smMouseCoordinates;
-	int smLastMouseButtonPressed;
-	int smLastKeyPressed;
-	int smModifier;
-	bool smKeyJustPressed;
-	bool smButtonJustPressed;
-	float smScroll;
+protected:
+    void onCursorPositionChanged();
 
-private:
+public:
+	InputCursorPosition mMouseCoordinates;
+	int mLastMouseButtonPressed;
+	int mLastKeyPressed;
+	int mModifier;
+	bool mKeyJustPressed;
+	bool mButtonJustPressed;
+	float mScroll;
+
+protected:
     IWindowInputAdapter* mWindowInputAdapter = nullptr;
 
 public:
-    GET(WindowInputAdapter);
+    IWindowInputAdapter* getWindowInputAdapter() const { return mWindowInputAdapter; };
 };
-REGISTER_CLASS(Input, System);
-NS_END
+};
