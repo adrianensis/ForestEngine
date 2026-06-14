@@ -6,12 +6,11 @@
 #include "Graphics/Camera/CameraManager.hpp"
 #include "Input/Input.hpp"
 #include "Input/InputManager.hpp"
-#include "Core/Event/EventsManager.hpp"
 #include "Core/Time/TimeUtils.hpp"
 #include "Core/Time/TimerManager.hpp"
 
 #include "Core/System/SystemsManager.hpp"
-#include "Window/WindowManager.hpp"
+
 #include "Graphics/RenderEngine.hpp"
 #include "Graphics/Model/ModelManager.hpp"
 #include "Graphics/Debug/DebugRenderer.hpp"
@@ -47,26 +46,22 @@ void Engine::init()
     GET_SYSTEM(EngineConfig).init();
     CREATE_SYSTEM(Window::WindowManager);
     GET_SYSTEM(Window::WindowManager).init();
+
     Window::WindowData windowData;
     windowData.mTitle = "Vulkan Engine";
     windowData.mFullScreen = false;
     windowData.mWindowSize = {1080, 720};
     windowData.mMainWindow = true;
-    Core::WeakPtr<Window::Window> window = GET_SYSTEM(Window::WindowManager).createWindow(windowData);
+    Core::WeakPtr<Window::IWindow> window = GET_SYSTEM(Window::WindowManager).createWindow<EngineWindow>(windowData);
 
 	// TODO: GPUInstance should be propagated, not singleton
-    GPUInstance::getInstance().init(window.getInternalPointer());
-
-	class EngineInput: public Input::IInput
-	{
-
-	};
+    GPUInstance::getInstance().init(Core::WeakPtr<EngineWindow>::cast(window).getInternalPointer());
 
 	EngineInput* engineInput = new EngineInput();
 
     CREATE_SYSTEM(Input::InputManager);
     GET_SYSTEM(Input::InputManager).init(engineInput);
-    GET_SYSTEM(Input::InputManager).getInput()->setWindowInputAdapter(GET_SYSTEM(Window::WindowManager).getMainWindow().getInternalPointer());
+    GET_SYSTEM(Input::InputManager).getInput()->setWindowInputAdapter(Core::WeakPtr<EngineWindow>::cast(window).getInternalPointer());
     CREATE_SYSTEM(CameraManager);
 	
     CREATE_SYSTEM(RenderEngine);
@@ -126,7 +121,7 @@ void Engine::run()
 		}
 
 		GET_SYSTEM(Input::InputManager).getInput()->update();
-		GET_SYSTEM(Window::WindowManager).getMainWindow()->pollEvents();
+		GET_SYSTEM(Window::WindowManager).update();
 
 		GET_SYSTEM(Command::CommandLine).update();
 
@@ -166,4 +161,181 @@ void Engine::terminate()
     LOG("Terminated OK!")
 
 	Core::Log::terminate();
+}
+
+void EngineWindow::onKeyCallback(int key, int scancode, int action, int mods)
+{
+	mInput->mModifier = mods;
+
+	switch (action)
+	{
+		case GLFW_PRESS:
+		{
+			mInput->mLastKeyPressed = key;
+			mInput->mKeyJustPressed = true;
+
+			switch (key)
+			{
+				case GLFW_KEY_ENTER:
+				{
+					Input::InputEventKeyEnter event;
+					GET_SYSTEM(Event::EventsManager).send<Input::InputEventKeyEnter>(nullptr, this, &event);
+					break;
+				}
+				case GLFW_KEY_ESCAPE:
+				{
+					Input::InputEventKeyEsc event;
+					GET_SYSTEM(Event::EventsManager).send<Input::InputEventKeyEsc>(nullptr, this, &event);
+					break;
+				}
+				case GLFW_KEY_DELETE:
+				{
+					Input::InputEventKeyDelete event;
+					GET_SYSTEM(Event::EventsManager).send<Input::InputEventKeyDelete>(nullptr, this, &event);
+					break;
+				}
+				case GLFW_KEY_BACKSPACE:
+				{
+					Input::InputEventKeyBackspace event;
+					GET_SYSTEM(Event::EventsManager).send<Input::InputEventKeyBackspace>(nullptr, this, &event);
+					break;
+				}
+				case GLFW_KEY_TAB:
+				{
+					Input::InputEventKeyTab event;
+					GET_SYSTEM(Event::EventsManager).send<Input::InputEventKeyTab>(nullptr, this, &event);
+					break;
+				}
+				case GLFW_KEY_UP:
+				case GLFW_KEY_DOWN:
+				case GLFW_KEY_LEFT:
+				case GLFW_KEY_RIGHT:
+				{
+					Input::InputEventKeyArrow event;
+					event.mArrowButton = key;
+					GET_SYSTEM(Event::EventsManager).send<Input::InputEventKeyArrow>(nullptr, this, &event);
+					break;
+				}
+				default:
+				{
+					Input::InputEventKeyPressed event;
+					event.mKey = key;
+					event.mMods = mods;
+					GET_SYSTEM(Event::EventsManager).send<Input::InputEventKeyPressed>(nullptr, this, &event);
+					break;
+				}
+			}
+			break;
+		}
+		case GLFW_RELEASE:
+		{
+			Input::InputEventKeyReleased event;
+			event.mKey = key;
+			event.mMods = mods;
+			GET_SYSTEM(Event::EventsManager).send<Input::InputEventKeyReleased>(nullptr, this, &event);
+
+			mInput->clearKey();
+			break;
+		}
+		case GLFW_REPEAT:
+		{
+			Input::InputEventKeyHold event;
+			event.mKey = key;
+			event.mMods = mods;
+			GET_SYSTEM(Event::EventsManager).send<Input::InputEventKeyHold>(nullptr, this, &event);
+
+			break;
+		}
+	}
+}
+
+void EngineWindow::onMouseButtonCallback(int button, int action, int mods)
+{
+	mInput->mModifier = mods;
+
+	switch (action)
+	{
+		case GLFW_PRESS:
+		{
+			mInput->mLastMouseButtonPressed = button;
+			mInput->mButtonJustPressed = true;
+
+			Input::InputEventMouseButtonPressed event;
+			event.mButton = button;
+			event.mMods = mods;
+			GET_SYSTEM(Event::EventsManager).send<Input::InputEventMouseButtonPressed>(nullptr, this, &event);
+			
+			break;
+		}
+		case GLFW_RELEASE:
+		{
+			Input::InputEventMouseButtonReleased event;
+			event.mButton = button;
+			event.mMods = mods;
+			
+            mInput->clearMouseButton();
+
+			GET_SYSTEM(Event::EventsManager).send<Input::InputEventMouseButtonReleased>(nullptr, this, &event);
+
+			break;
+		}
+	}
+}
+
+void EngineWindow::onScrollCallback(double xoffset, double yoffset)
+{
+	mInput->mScroll = yoffset;
+
+	Input::InputEventScroll event;
+	event.mScroll = yoffset;
+	GET_SYSTEM(Event::EventsManager).send<Input::InputEventScroll>(nullptr, this, &event);
+}
+
+void EngineWindow::onCharCallback(unsigned int codepoint)
+{
+	Input::InputEventChar event;
+	event.mChar = (char)codepoint;
+	GET_SYSTEM(Event::EventsManager).send<Input::InputEventChar>(nullptr, this, &event);
+}
+
+void EngineWindow::onCursorPositionCallback(double x, double y)
+{
+	mInput->mMouseCoordinates = processCursorPosition(x, y);
+	Input::InputEventMouseMoved event;
+	GET_SYSTEM(Event::EventsManager).send<Input::InputEventMouseMoved>(nullptr, this, &event);
+}
+
+VkSurfaceKHR EngineWindow::createSurface(GPUContext* gpuContext) const
+{
+	VkAllocationCallbacks* allocator = VK_NULL_HANDLE;
+    VkSurfaceKHR surface = VK_NULL_HANDLE;
+    if(glfwCreateWindowSurface(gpuContext->gpuVulkanInstance->getVkInstance(), getGlfwWindow(), allocator, (VkSurfaceKHR*) &surface) != VK_SUCCESS)
+    {
+        CHECK_MSG(false, "Error creating surface!")
+    }
+
+    return surface;
+}
+
+void EngineWindow::onUpdate()
+{
+	mInput->mKeyJustPressed = false;
+	mInput->mButtonJustPressed = false;
+	mInput->mScroll = 0;
+
+	if(mInput->mLastMouseButtonPressed != -1)
+	{
+		Input::InputEventMouseButtonHold event;
+		event.mButton = mInput->mLastMouseButtonPressed;
+		event.mMods = mInput->mModifier;
+		GET_SYSTEM(Event::EventsManager).send<Input::InputEventMouseButtonHold>(nullptr, this, &event);
+	}
+
+	if(mInput->mLastKeyPressed != -1)
+	{
+		Input::InputEventKeyHold event;
+		event.mKey = mInput->mLastKeyPressed;
+		event.mMods = mInput->mModifier;
+		GET_SYSTEM(Event::EventsManager).send<Input::InputEventKeyHold>(nullptr, this, &event);
+	}
 }

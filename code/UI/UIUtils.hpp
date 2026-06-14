@@ -7,8 +7,8 @@ class UIUtils
 {
 public:
 
-    static Core::f32 correctAspectRatio(Window::Window* window, Core::f32 x);
-    static Maths::Vector3 correctAspectRatioVectorX(Window::Window* window, const Maths::Vector3& vector);
-    static Maths::Vector3 toScreenSpace(Window::Window* window, const Maths::Vector3& vector);
+    static Core::f32 correctAspectRatio(Window::IWindow* window, Core::f32 x);
+    static Maths::Vector3 correctAspectRatioVectorX(Window::IWindow* window, const Maths::Vector3& vector);
+    static Maths::Vector3 toScreenSpace(Window::IWindow* window, const Maths::Vector3& vector);
 };
 

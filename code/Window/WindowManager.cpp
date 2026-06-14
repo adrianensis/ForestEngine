@@ -18,26 +18,13 @@ void WindowManager::update()
 {
     FOR_ARRAY(i, mWindows)
     {
-        mWindows.at(i)->pollEvents();
+        mWindows.at(i)->update();
     }
 }
 
-Core::WeakPtr<Window> WindowManager::createWindow(const WindowData& windowData)
+Core::WeakPtr<IWindow> WindowManager::getWindow(Core::u32 index) const
 {
-    Core::WeakPtr<Window> window = mWindows.emplace_back(Core::OwnerPtr<Window>::newObject());
-    window->init(mWindows.size() - 1, windowData);
-
-    if(windowData.mMainWindow)
-    {
-        mMainWindow = window;
-    }
-
-    return window;
-}
-
-Core::WeakPtr<Window> WindowManager::getWindow(Core::u32 index) const
-{
-    Core::WeakPtr<Window> window = mWindows.at(index);
+    Core::WeakPtr<IWindow> window = mWindows.at(index);
     return window;
 }
 NS_END

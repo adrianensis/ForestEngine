@@ -35,7 +35,7 @@ void RenderEngine::postSceneChanged()
 {
 }
 
-void RenderEngine::onResize(Window::Window* window)
+void RenderEngine::onResize(Window::IWindow* window)
 {
     GPUInstance::getInstance().mGPUContext->setWindowResized();
     GPUInstance::getInstance().mGPUContext->recreateRenderingObjects();

@@ -1,19 +1,16 @@
 #include "Window/Window.hpp"
-#include "GLFW/glfw3.h"
-#include "Input/InputEvents.hpp"
-#include "Core/Event/EventsManager.hpp"
-#include "Core/System/SystemsManager.hpp"
-#include "GPU/Core/GPUContext.hpp"
+#include "Window/WindowFramework.hpp"
+#include "Core/Log/Log.hpp"
 
 namespace Window
 {
 	
-GLFWwindow* Window::getGlfwWindow() const 
+GLFWwindow* IWindow::getGlfwWindow() const 
 {
     return mGLFWWindow;
 }
 
-std::vector<const char*> Window::getRequiredExtensions() const
+std::vector<const char*> IWindow::getRequiredExtensions() const
 {
 	unsigned int glfwExtensionCount = 0;
     const char** glfwExtensions;
@@ -21,17 +18,17 @@ std::vector<const char*> Window::getRequiredExtensions() const
     return std::vector<const char*>(glfwExtensions, glfwExtensions + glfwExtensionCount);
 }
 
-WindowSize Window::getWindowSize() const
+WindowSize IWindow::getWindowSize() const
 {
 	return mWindowData.mWindowSize;
 }
 
-float Window::getAspectRatio() const
+float IWindow::getAspectRatio() const
 {
 	return mWindowData.mWindowSize.x / mWindowData.mWindowSize.y;
 }
 
-void Window::init(int id, const WindowData& windowData)
+void IWindow::init(int id, const WindowData& windowData)
 {
     mID = id;
     mWindowData = windowData;
@@ -86,15 +83,15 @@ void Window::init(int id, const WindowData& windowData)
 	glfwSetScrollCallback(mGLFWWindow, scrollCallbackGLFW);
 	glfwSetCharCallback(mGLFWWindow, charCallbackGLFW);
 	glfwSetCursorPosCallback(mGLFWWindow, cursorPositionCallbackGLFW);
-    glfwSetFramebufferSizeCallback(mGLFWWindow, &this->onResizeGLFW);
+    glfwSetFramebufferSizeCallback(mGLFWWindow, onResizeGLFW);
 }
 
-bool Window::isClosed() const
+bool IWindow::isClosed() const
 {
 	return glfwWindowShouldClose(mGLFWWindow);
 }
 
-void Window::swap()
+void IWindow::swap()
 {
 	// https://www.khronos.org/opengl/wiki/Common_Mistakes
 	// section: glFinish and glFlush
@@ -102,18 +99,24 @@ void Window::swap()
 	// glfwSwapBuffers(mGLFWWindow);
 }
 
-void Window::terminate()
+void IWindow::terminate()
 {
 	glfwDestroyWindow(mGLFWWindow);
 	glfwTerminate();
 }
 
-void Window::setCursorVisibility(bool visible)
+void IWindow::update()
+{
+	onUpdate();
+	pollEvents();
+}
+
+void IWindow::setCursorVisibility(bool visible)
 {
     glfwSetInputMode(mGLFWWindow, GLFW_CURSOR, visible ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
 }
 
-void Window::onResize(GLFWwindow *window, int width, int height)
+void IWindow::onResizeCallback(int width, int height)
 {
 	mWindowData.mWindowSize = WindowSize{(float)width, (float)height};
 	waitUntilNotMinimized();
@@ -124,195 +127,43 @@ void Window::onResize(GLFWwindow *window, int width, int height)
 	}
 }
 
-void Window::onResizeGLFW(GLFWwindow *windowGLFW, int width, int height)
+void IWindow::onResizeGLFW(GLFWwindow *windowGLFW, int width, int height)
 {
-	Window* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(windowGLFW));
-    window->onResize(windowGLFW, width, height);
+	IWindow* window = reinterpret_cast<IWindow*>(glfwGetWindowUserPointer(windowGLFW));
+    window->onResizeCallback(width, height);
 }
 
-void Window::keyCallbackGLFW(GLFWwindow *windowGLFW, int key, int scancode, int action, int mods)
+void IWindow::keyCallbackGLFW(GLFWwindow *windowGLFW, int key, int scancode, int action, int mods)
 {
-    Window* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(windowGLFW));
-    window->keyCallback(key, scancode, action, mods);
+    IWindow* window = reinterpret_cast<IWindow*>(glfwGetWindowUserPointer(windowGLFW));
+    window->onKeyCallback(key, scancode, action, mods);
 }
 
-void Window::mouseButtonCallbackGLFW(GLFWwindow *windowGLFW, int button, int action, int mods)
+void IWindow::mouseButtonCallbackGLFW(GLFWwindow *windowGLFW, int button, int action, int mods)
 {
-    Window* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(windowGLFW));
-    window->mouseButtonCallback(button, action, mods);
+    IWindow* window = reinterpret_cast<IWindow*>(glfwGetWindowUserPointer(windowGLFW));
+    window->onMouseButtonCallback(button, action, mods);
 }
 
-void Window::scrollCallbackGLFW(GLFWwindow *windowGLFW, double xoffset, double yoffset)
+void IWindow::scrollCallbackGLFW(GLFWwindow *windowGLFW, double xoffset, double yoffset)
 {
-    Window* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(windowGLFW));
-    window->scrollCallback(xoffset, yoffset);
+    IWindow* window = reinterpret_cast<IWindow*>(glfwGetWindowUserPointer(windowGLFW));
+    window->onScrollCallback(xoffset, yoffset);
 }
 
-void Window::charCallbackGLFW(GLFWwindow *windowGLFW, unsigned int codepoint)
+void IWindow::charCallbackGLFW(GLFWwindow *windowGLFW, unsigned int codepoint)
 {
-    Window* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(windowGLFW));
-    window->charCallback(codepoint);
+    IWindow* window = reinterpret_cast<IWindow*>(glfwGetWindowUserPointer(windowGLFW));
+    window->onCharCallback(codepoint);
 }
 
-void Window::cursorPositionCallbackGLFW(GLFWwindow *windowGLFW, double x, double y)
+void IWindow::cursorPositionCallbackGLFW(GLFWwindow *windowGLFW, double x, double y)
 {
-    Window* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(windowGLFW));
-    window->cursorPositionCallback(x, y);
+    IWindow* window = reinterpret_cast<IWindow*>(glfwGetWindowUserPointer(windowGLFW));
+    window->onCursorPositionCallback(x, y);
 }
 
-void Window::keyCallback(int key, int scancode, int action, int mods)
-{
-	mInput->mModifier = mods;
-
-	switch (action)
-	{
-		case GLFW_PRESS:
-		{
-			mInput->mLastKeyPressed = key;
-			mInput->mKeyJustPressed = true;
-
-			switch (key)
-			{
-				case GLFW_KEY_ENTER:
-				{
-					Input::InputEventKeyEnter event;
-					GET_SYSTEM(Event::EventsManager).send<Input::InputEventKeyEnter>(nullptr, this, &event);
-					break;
-				}
-				case GLFW_KEY_ESCAPE:
-				{
-					Input::InputEventKeyEsc event;
-					GET_SYSTEM(Event::EventsManager).send<Input::InputEventKeyEsc>(nullptr, this, &event);
-					break;
-				}
-				case GLFW_KEY_DELETE:
-				{
-					Input::InputEventKeyDelete event;
-					GET_SYSTEM(Event::EventsManager).send<Input::InputEventKeyDelete>(nullptr, this, &event);
-					break;
-				}
-				case GLFW_KEY_BACKSPACE:
-				{
-					Input::InputEventKeyBackspace event;
-					GET_SYSTEM(Event::EventsManager).send<Input::InputEventKeyBackspace>(nullptr, this, &event);
-					break;
-				}
-				case GLFW_KEY_TAB:
-				{
-					Input::InputEventKeyTab event;
-					GET_SYSTEM(Event::EventsManager).send<Input::InputEventKeyTab>(nullptr, this, &event);
-					break;
-				}
-				case GLFW_KEY_UP:
-				case GLFW_KEY_DOWN:
-				case GLFW_KEY_LEFT:
-				case GLFW_KEY_RIGHT:
-				{
-					Input::InputEventKeyArrow event;
-					event.mArrowButton = key;
-					GET_SYSTEM(Event::EventsManager).send<Input::InputEventKeyArrow>(nullptr, this, &event);
-					break;
-				}
-				default:
-				{
-					Input::InputEventKeyPressed event;
-					event.mKey = key;
-					event.mMods = mods;
-					GET_SYSTEM(Event::EventsManager).send<Input::InputEventKeyPressed>(nullptr, this, &event);
-					break;
-				}
-			}
-			break;
-		}
-		case GLFW_RELEASE:
-		{
-			Input::InputEventKeyReleased event;
-			event.mKey = key;
-			event.mMods = mods;
-			GET_SYSTEM(Event::EventsManager).send<Input::InputEventKeyReleased>(nullptr, this, &event);
-
-			mInput->clearKey();
-			break;
-		}
-		case GLFW_REPEAT:
-		{
-			Input::InputEventKeyHold event;
-			event.mKey = key;
-			event.mMods = mods;
-			GET_SYSTEM(Event::EventsManager).send<Input::InputEventKeyHold>(nullptr, this, &event);
-
-			break;
-		}
-	}
-}
-
-void Window::mouseButtonCallback(int button, int action, int mods)
-{
-	mInput->mModifier = mods;
-
-	switch (action)
-	{
-		case GLFW_PRESS:
-		{
-			mInput->mLastMouseButtonPressed = button;
-			mInput->mButtonJustPressed = true;
-
-			Input::InputEventMouseButtonPressed event;
-			event.mButton = button;
-			event.mMods = mods;
-			GET_SYSTEM(Event::EventsManager).send<Input::InputEventMouseButtonPressed>(nullptr, this, &event);
-			
-			break;
-		}
-		case GLFW_RELEASE:
-		{
-			Input::InputEventMouseButtonReleased event;
-			event.mButton = button;
-			event.mMods = mods;
-			
-            mInput->clearMouseButton();
-
-			GET_SYSTEM(Event::EventsManager).send<Input::InputEventMouseButtonReleased>(nullptr, this, &event);
-
-			break;
-		}
-	}
-}
-
-void Window::scrollCallback(double xoffset, double yoffset)
-{
-	mInput->mScroll = yoffset;
-
-	Input::InputEventScroll event;
-	event.mScroll = yoffset;
-	GET_SYSTEM(Event::EventsManager).send<Input::InputEventScroll>(nullptr, this, &event);
-}
-
-void Window::charCallback(unsigned int codepoint)
-{
-	Input::InputEventChar event;
-	event.mChar = (char)codepoint;
-	GET_SYSTEM(Event::EventsManager).send<Input::InputEventChar>(nullptr, this, &event);
-}
-
-void Window::cursorPositionCallback(double x, double y)
-{
-	mInput->mMouseCoordinates = processCursorPosition(x, y);
-	Input::InputEventMouseMoved event;
-	GET_SYSTEM(Event::EventsManager).send<Input::InputEventMouseMoved>(nullptr, this, &event);
-}
-
-Input::InputCursorPosition Window::getMousePosition() const
-{
-	// double mouseCoordX, mouseCoordY;
-	// glfwGetCursorPos(mGLFWWindow, &mouseCoordX, &mouseCoordY);
-	// Input::InputCursorPosition newMouseCoordinates = processCursorPosition(mouseCoordX, mouseCoordY);
-    // return newMouseCoordinates;
-
-	return mInput->mMouseCoordinates;
-}
-
-Input::InputCursorPosition Window::processCursorPosition(double x, double y) const
+Input::InputCursorPosition IWindow::processCursorPosition(double x, double y) const
 {
 	double halfWindowSizeX = mWindowData.mWindowSize.x / 2.0;
 	double halfWindowSizeY = mWindowData.mWindowSize.y / 2.0;
@@ -324,12 +175,12 @@ Input::InputCursorPosition Window::processCursorPosition(double x, double y) con
 	return newMouseCoordinates;
 }
 
-void Window::pollEvents() const
+void IWindow::pollEvents() const
 {
     glfwPollEvents();
 }
 
-void Window::waitUntilNotMinimized() const
+void IWindow::waitUntilNotMinimized() const
 {
 	WindowSize size = getWindowSize();
 	int width = size.x;
@@ -346,26 +197,14 @@ void Window::waitUntilNotMinimized() const
 	}
 }
 
-bool Window::isIconified() const
+bool IWindow::isIconified() const
 {
 	return glfwGetWindowAttrib(mGLFWWindow, GLFW_ICONIFIED) == 1;
 }
 
-void Window::addWindowListener(IWindowListener* windowListener)
+void IWindow::addWindowListener(IWindowListener* windowListener)
 {
 	mWindowListeners.push_back(windowListener);
-}
-
-VkSurfaceKHR Window::createSurface(GPUContext* gpuContext) const
-{
-	VkAllocationCallbacks* allocator = VK_NULL_HANDLE;
-    VkSurfaceKHR surface = VK_NULL_HANDLE;
-    if(glfwCreateWindowSurface(gpuContext->gpuVulkanInstance->getVkInstance(), getGlfwWindow(), allocator, (VkSurfaceKHR*) &surface) != VK_SUCCESS)
-    {
-        CHECK_MSG(false, "Error creating surface!")
-    }
-
-    return surface;
 }
 
 };

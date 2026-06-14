@@ -15,14 +15,8 @@ class IWindowInputAdapter
 {
 public:
     virtual ~IWindowInputAdapter() = default;
-    virtual void keyCallback(int key, int scancode, int action, int mods) = 0;
-    virtual void mouseButtonCallback(int button, int action, int mods) = 0;
-    virtual void scrollCallback(double xoffset, double yoffset) = 0;
-    virtual void charCallback(unsigned int codepoint) = 0;
-    virtual void cursorPositionCallback(double x, double y) = 0;
-    virtual InputCursorPosition getMousePosition() const = 0;
-
     void setInput(IInput* input) { mInput = input; }
+
 protected:
     IInput* mInput = nullptr;
 };
@@ -49,12 +43,12 @@ protected:
 
 public:
 	InputCursorPosition mMouseCoordinates;
-	int mLastMouseButtonPressed;
-	int mLastKeyPressed;
-	int mModifier;
-	bool mKeyJustPressed;
-	bool mButtonJustPressed;
-	float mScroll;
+	int mLastMouseButtonPressed = -1;
+	int mLastKeyPressed = -1;
+	int mModifier = -1;
+	bool mKeyJustPressed = false;
+	bool mButtonJustPressed = false;
+	float mScroll = 0;
 
 protected:
     IWindowInputAdapter* mWindowInputAdapter = nullptr;

@@ -1,15 +1,13 @@
 #include "Input/Input.hpp"
-#include "Core/Event/EventsManager.hpp"
-#include "Core/System/SystemsManager.hpp"
 
 namespace Input
 {
 void IInput::init()
 {
 	mMouseCoordinates = InputCursorPosition();
-	mLastMouseButtonPressed = INVALID_INDEX;
-	mLastKeyPressed = INVALID_INDEX;
-	mModifier = INVALID_INDEX;
+	mLastMouseButtonPressed = -1;
+	mLastKeyPressed = -1;
+	mModifier = -1;
 	mKeyJustPressed = false;
 	mButtonJustPressed = false;
 	mScroll = 0;
@@ -27,33 +25,7 @@ void IInput::update()
 	mButtonJustPressed = false;
 	mScroll = 0;
 
-	assert(mWindowInputAdapter && "mWindowInputAdapter is NULL!");
-
-	InputCursorPosition newMouseCoordinates = mWindowInputAdapter->getMousePosition();
-
-	// if (!mMouseCoordinates.eq(newMouseCoordinates))
-	// {
-	// 	mMouseCoordinates = newMouseCoordinates;
-
-	// 	InputEventMouseMoved event;
-	// 	GET_SYSTEM(Event::EventsManager).send<InputEventMouseMoved>(nullptr, this, &event);
-	// }
-
-	// if(mLastMouseButtonPressed != -1)
-	// {
-	// 	InputEventMouseButtonHold event;
-	// 	event.mButton = mLastMouseButtonPressed;
-	// 	event.mMods = mModifier;
-	// 	GET_SYSTEM(Event::EventsManager).send<InputEventMouseButtonHold>(nullptr, this, &event);
-	// }
-
-	// if(mLastKeyPressed != -1)
-	// {
-	// 	InputEventKeyHold event;
-	// 	event.mKey = mLastKeyPressed;
-	// 	event.mMods = mModifier;
-	// 	GET_SYSTEM(Event::EventsManager).send<InputEventKeyHold>(nullptr, this, &event);
-	// }
+	// assert(mWindowInputAdapter && "mWindowInputAdapter is NULL!");
 }
 
 bool IInput::isKeyPressedOnce(int key)
@@ -93,15 +65,15 @@ float IInput::getScroll()
 
 void IInput::clearMouseButton()
 {
-	mLastMouseButtonPressed = INVALID_INDEX;
-	mModifier = INVALID_INDEX;
+	mLastMouseButtonPressed = -1;
+	mModifier = -1;
 	mButtonJustPressed = false;
 }
 
 void IInput::clearKey()
 {
-	mLastKeyPressed = INVALID_INDEX;
-	mModifier = INVALID_INDEX;
+	mLastKeyPressed = -1;
+	mModifier = -1;
 	mKeyJustPressed = false;
 }
 
