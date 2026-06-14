@@ -10,7 +10,7 @@ namespace Window
 	
 GLFWwindow* Window::getGlfwWindow() const 
 {
-    return mGLTFWindow;
+    return mGLFWWindow;
 }
 
 std::vector<const char*> Window::getRequiredExtensions() const
@@ -63,13 +63,13 @@ void Window::init(int id, const WindowData& windowData)
     
     // glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
 
-	mGLTFWindow = glfwCreateWindow(mWindowData.mWindowSize.x, mWindowData.mWindowSize.y, mWindowData.mTitle.c_str(), /*monitor*/NULL, NULL);
+	mGLFWWindow = glfwCreateWindow(mWindowData.mWindowSize.x, mWindowData.mWindowSize.y, mWindowData.mTitle.c_str(), /*monitor*/NULL, NULL);
 
-    glfwSetWindowUserPointer(mGLTFWindow, reinterpret_cast<void *>(this));
+    glfwSetWindowUserPointer(mGLFWWindow, reinterpret_cast<void *>(this));
 
-    if (mGLTFWindow)
+    if (mGLFWWindow)
     {
-        glfwMakeContextCurrent(mGLTFWindow);
+        glfwMakeContextCurrent(mGLFWWindow);
         glfwSwapInterval(0);
     }
     else
@@ -79,19 +79,19 @@ void Window::init(int id, const WindowData& windowData)
 		return;
     }
 
-	glfwSetCursorPos(mGLTFWindow, mWindowData.mWindowSize.x / 2.0f, mWindowData.mWindowSize.y / 2.0f);
+	glfwSetCursorPos(mGLFWWindow, mWindowData.mWindowSize.x / 2.0f, mWindowData.mWindowSize.y / 2.0f);
 
-    glfwSetKeyCallback(mGLTFWindow, keyCallbackGLFW);
-	glfwSetMouseButtonCallback(mGLTFWindow, mouseButtonCallbackGLFW);
-	glfwSetScrollCallback(mGLTFWindow, scrollCallbackGLFW);
-	glfwSetCharCallback(mGLTFWindow, charCallbackGLFW);
-	glfwSetCursorPosCallback(mGLTFWindow, cursorPositionCallbackGLFW);
-    glfwSetFramebufferSizeCallback(mGLTFWindow, &this->onResizeGLFW);
+    glfwSetKeyCallback(mGLFWWindow, keyCallbackGLFW);
+	glfwSetMouseButtonCallback(mGLFWWindow, mouseButtonCallbackGLFW);
+	glfwSetScrollCallback(mGLFWWindow, scrollCallbackGLFW);
+	glfwSetCharCallback(mGLFWWindow, charCallbackGLFW);
+	glfwSetCursorPosCallback(mGLFWWindow, cursorPositionCallbackGLFW);
+    glfwSetFramebufferSizeCallback(mGLFWWindow, &this->onResizeGLFW);
 }
 
 bool Window::isClosed() const
 {
-	return glfwWindowShouldClose(mGLTFWindow);
+	return glfwWindowShouldClose(mGLFWWindow);
 }
 
 void Window::swap()
@@ -99,18 +99,18 @@ void Window::swap()
 	// https://www.khronos.org/opengl/wiki/Common_Mistakes
 	// section: glFinish and glFlush
 	//glFlush();
-	// glfwSwapBuffers(mGLTFWindow);
+	// glfwSwapBuffers(mGLFWWindow);
 }
 
 void Window::terminate()
 {
-	glfwDestroyWindow(mGLTFWindow);
+	glfwDestroyWindow(mGLFWWindow);
 	glfwTerminate();
 }
 
 void Window::setCursorVisibility(bool visible)
 {
-    glfwSetInputMode(mGLTFWindow, GLFW_CURSOR, visible ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
+    glfwSetInputMode(mGLFWWindow, GLFW_CURSOR, visible ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
 }
 
 void Window::onResize(GLFWwindow *window, int width, int height)
@@ -305,7 +305,7 @@ void Window::cursorPositionCallback(double x, double y)
 Input::InputCursorPosition Window::getMousePosition() const
 {
 	// double mouseCoordX, mouseCoordY;
-	// glfwGetCursorPos(mGLTFWindow, &mouseCoordX, &mouseCoordY);
+	// glfwGetCursorPos(mGLFWWindow, &mouseCoordX, &mouseCoordY);
 	// Input::InputCursorPosition newMouseCoordinates = processCursorPosition(mouseCoordX, mouseCoordY);
     // return newMouseCoordinates;
 
@@ -348,7 +348,7 @@ void Window::waitUntilNotMinimized() const
 
 bool Window::isIconified() const
 {
-	return glfwGetWindowAttrib(mGLTFWindow, GLFW_ICONIFIED) == 1;
+	return glfwGetWindowAttrib(mGLFWWindow, GLFW_ICONIFIED) == 1;
 }
 
 void Window::addWindowListener(IWindowListener* windowListener)

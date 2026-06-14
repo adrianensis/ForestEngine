@@ -78,14 +78,14 @@ private:
     virtual void cursorPositionCallback(double x, double y) override;
 
 private:
-	GLFWwindow *mGLTFWindow = nullptr;
+	GLFWwindow *mGLFWWindow = nullptr;
 	WindowData mWindowData;
     int mID = -1;
 
     std::vector<IWindowListener*> mWindowListeners;
 
 public:
-    CGET(GLTFWindow);
-    CRGET(WindowData);
+    const GLFWwindow* getGLFWWindow() const { return mGLFWWindow; };
+    const WindowData& getWindowData() const { return mWindowData; };
 };
 };
