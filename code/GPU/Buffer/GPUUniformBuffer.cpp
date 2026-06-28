@@ -28,7 +28,7 @@ void GPUUniformBuffer::init(GPUContext* gpuContext, GPU::u32 size, GPU::u32 bind
         gpuBufferData.Usage = VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;
         break;
     }
-    gpuBufferData.MemoryProperties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
+    gpuBufferData.MemoryUsage = VMA_MEMORY_USAGE_CPU_TO_GPU;
 
     FOR_RANGE(i, 0, GPUContext::MAX_FRAMES_IN_FLIGHT)
     {

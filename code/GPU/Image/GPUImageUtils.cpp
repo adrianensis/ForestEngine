@@ -503,7 +503,7 @@ bool GPUImageUtils::createTextureImage(GPUContext* gpuContext, VkImage textureIm
     GPUBufferData stagingBufferConfig{};
     stagingBufferConfig.Size = imageSize;
     stagingBufferConfig.Usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
-    stagingBufferConfig.MemoryProperties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
+    stagingBufferConfig.MemoryUsage = VMA_MEMORY_USAGE_CPU_TO_GPU;
 
     if (!stagingBuffer.init(gpuContext, stagingBufferConfig)) {
         CHECK_MSG(false,"Could not initialize texture image stagingBuffer");

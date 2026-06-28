@@ -1,5 +1,6 @@
 #pragma once
 
+#include "GPU/Core/GPUMemoryAllocator.hpp"
 #include "GPU/Core/GPUPhysicalDevice.h"
 #include "GPU/Core/GPUDevice.h"
 #include "GPU/Core/GPUCommandPool.h"
@@ -10,7 +11,7 @@ class GPUBufferData
 public:
     VkDeviceSize Size = 0;
     VkBufferUsageFlags Usage = 0;
-    VkMemoryPropertyFlags MemoryProperties = 0;
+    VmaMemoryUsage MemoryUsage = VMA_MEMORY_USAGE_AUTO;
 };
 
 class GPUBuffer
@@ -26,7 +27,7 @@ private:
     GPUContext* mGPUContext = nullptr;
     GPUBufferData mGPUBufferData;
     VkBuffer mVkBuffer = VK_NULL_HANDLE;
-    VkDeviceMemory mVkDeviceMemory = VK_NULL_HANDLE;
+    VmaAllocation mAllocation = VK_NULL_HANDLE;
     bool mInit = false;
 public:
     const auto& getGPUBufferData() const { return mGPUBufferData; }

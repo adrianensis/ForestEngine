@@ -1,4 +1,5 @@
 #include "GPU/Buffer/GPUIndicesBuffer.hpp"
+#include "GPU/Core/GPUMemoryAllocator.hpp"
 
 void GPUIndicesBuffer::init(GPUContext* gpuContext, const GPUDataType& gpuDataType, GPU::u32 size, bool isStatic)
 {
@@ -8,7 +9,7 @@ void GPUIndicesBuffer::init(GPUContext* gpuContext, const GPUDataType& gpuDataTy
     GPUBufferData gpuBufferData{};
     gpuBufferData.Size = mGPUDataType.mTypeSizeInBytes * size;
     gpuBufferData.Usage = VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
-    gpuBufferData.MemoryProperties = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
+    gpuBufferData.MemoryUsage = VMA_MEMORY_USAGE_GPU_ONLY;
 
     if (!mBuffer.init(mGPUContext, gpuBufferData)) {
         CHECK_MSG(false,"Could not initialize staging mBuffer for index buffer");
@@ -30,7 +31,7 @@ bool GPUIndicesBuffer::setData(const void* data, GPU::u32 size) {
     GPUBufferData stagingBufferConfig{};
     stagingBufferConfig.Size = bufferSize;
     stagingBufferConfig.Usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
-    stagingBufferConfig.MemoryProperties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
+    stagingBufferConfig.MemoryUsage = VMA_MEMORY_USAGE_CPU_TO_GPU;
 
     GPUBuffer stagingBuffer;//(vulkanPhysicalDevice, vulkanDevice);
     if (!stagingBuffer.init(mGPUContext, stagingBufferConfig)) {

@@ -35,9 +35,10 @@ private:
     GPUContext* mGPUContext = nullptr;
     VkImage mVkImage = VK_NULL_HANDLE;
     VkImageView mVkImageView = VK_NULL_HANDLE;
-    VkDeviceMemory vkDeviceMemory = VK_NULL_HANDLE;
+    VmaAllocation mAllocation = VK_NULL_HANDLE;
     GPUImageData mGPUImageData;
     VkImageLayout mCurrentLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+
 public:
     auto getVkImage() const { return mVkImage; }
     auto getVkImageView() const { return mVkImageView; }
