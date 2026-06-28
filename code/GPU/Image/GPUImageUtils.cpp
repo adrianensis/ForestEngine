@@ -228,6 +228,8 @@ VkImageView GPUImageUtils::createImageView(GPUContext* gpuContext, VkImage image
     
     PROFILER_CPU_NAMED(createImageView);
 
+    constexpr VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
+
     VkImageViewCreateInfo viewInfo{};
     viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
     viewInfo.image = image;
@@ -240,7 +242,7 @@ VkImageView GPUImageUtils::createImageView(GPUContext* gpuContext, VkImage image
     viewInfo.subresourceRange.layerCount = 1;
 
     VkImageView imageView;
-    if (vkCreateImageView(gpuContext->vulkanDevice->getDevice(), &viewInfo, nullptr, &imageView) != VK_SUCCESS) {
+    if (vkCreateImageView(gpuContext->vulkanDevice->getDevice(), &viewInfo, allocationCallbacks, &imageView) != VK_SUCCESS) {
         CHECK_MSG(false,"Could not create Vulkan image view");
         return nullptr;
     }

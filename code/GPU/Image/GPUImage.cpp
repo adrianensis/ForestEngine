@@ -7,7 +7,7 @@ bool GPUImage::init(GPUContext* gpuContext, const GPUImageData& gpuImageData)
     mGPUContext = gpuContext;
     mGPUImageData = gpuImageData;
     mCurrentLayout = mGPUImageData.InitialLayout;
-    constexpr VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
+    // constexpr VkAllocationCallbacks* allocationCallbacks = VK_NULL_HANDLE;
 
     VkImageCreateInfo imageInfo{};
     imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;

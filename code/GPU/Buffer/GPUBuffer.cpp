@@ -9,7 +9,7 @@ bool GPUBuffer::init(GPUContext* gpuContext, const GPUBufferData& gpuBufferData)
     mGPUContext = gpuContext;
     mGPUBufferData = gpuBufferData;
 
-    VkAllocationCallbacks* allocator = VK_NULL_HANDLE;
+    // VkAllocationCallbacks* allocator = VK_NULL_HANDLE;
 
     VkBufferCreateInfo bufferInfo{};
     bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
