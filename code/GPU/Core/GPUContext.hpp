@@ -6,6 +6,7 @@
 #include "GPU/Core/GPUCommandPool.h"
 #include "GPU/Core/GPUCommandBuffer.h"
 #include "GPU/Core/GPUDefinitions.h"
+#include "GPU/Core/GPUMemoryAllocator.hpp"
 class IGPUWindow;
 
 #define GPU_EXTENSION_FUNCTION_TYPE(extensionFunctionName) PFN_##extensionFunctionName
@@ -62,6 +63,7 @@ public:
     std::vector<VkFence> inFlightFences;
     GPU::u32 currentFrame = 0;
     GPU::u32 currentSwapChainImageIndex = 0;
+    VmaAllocator mVmaAllocator;
     bool mWindowResized = false;
     IGPUWindow* mGPUWindow = nullptr;
     

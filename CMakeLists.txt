@@ -183,6 +183,10 @@ add_subdirectory("${DEPENDENCIES_DIR}/json-3.11.3")
 check_exist("${CMAKE_SOURCE_DIR}/${DEPENDENCIES_DIR}/stb-master")
 include_directories("${DEPENDENCIES_DIR}/stb-master")
 
+# VulkanMemoryAllocator
+check_exist("${CMAKE_SOURCE_DIR}/${DEPENDENCIES_DIR}/VulkanMemoryAllocator")
+include_directories("${DEPENDENCIES_DIR}/VulkanMemoryAllocator/include")
+
 # freetype
 check_exist("${CMAKE_SOURCE_DIR}/${DEPENDENCIES_DIR}/freetype-2.14.3")
 add_subdirectory("${DEPENDENCIES_DIR}/freetype-2.14.3")

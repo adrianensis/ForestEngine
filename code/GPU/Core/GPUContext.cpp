@@ -67,6 +67,14 @@ void GPUContext::init(IGPUWindow* gpuWindow)
     function_vkCmdSetStencilOpEXT = GPU_LOAD_EXTENSION_FUNCTION(vkCmdSetStencilOpEXT);
     function_vkCmdSetStencilTestEnableEXT = GPU_LOAD_EXTENSION_FUNCTION(vkCmdSetStencilTestEnableEXT);
 
+    VmaAllocatorCreateInfo allocatorInfo = {};
+    allocatorInfo.physicalDevice = vulkanPhysicalDevice->getPhysicalDevice();
+    allocatorInfo.device = vulkanDevice->getDevice();
+    allocatorInfo.instance = gpuVulkanInstance->getVkInstance();
+    allocatorInfo.vulkanApiVersion = VK_API_VERSION_1_3; // Match your VMA_VULKAN_VERSION
+
+    vmaCreateAllocator(&allocatorInfo, &mVmaAllocator);
+
 #ifdef ENGINE_ENABLE_PROFILER
     profilingCommandPool = new  GPUCommandPool();
     profilingCommandPool->init(this, 0);
@@ -177,6 +185,7 @@ void GPUContext::terminate()
     delete vulkanPhysicalDevice;
     gpuVulkanInstance->terminate();
     delete gpuVulkanInstance;
+    vmaDestroyAllocator(mVmaAllocator);
 }
 
 bool GPUContext::createSurface()
